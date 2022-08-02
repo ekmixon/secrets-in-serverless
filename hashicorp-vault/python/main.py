@@ -22,12 +22,17 @@ jwt = requests.get('http://metadata/computeMetadata/v1/instance/service-accounts
     headers={'Metadata-Flavor':'Google'},
     params={'audience':'http://vault/socialmedia', 'format':'full'})
 
-auth = requests.post(vault_addr + '/v1/auth/gcp/login',
-    json={'role':'socialmedia', 'jwt':jwt.text})
+auth = requests.post(
+    f'{vault_addr}/v1/auth/gcp/login',
+    json={'role': 'socialmedia', 'jwt': jwt.text},
+)
+
 token = auth.json()['auth']['client_token']
 
-r = requests.get(vault_addr + '/v1/secret/apikeys/twitter',
-    headers={'x-vault-token': token})
+r = requests.get(
+    f'{vault_addr}/v1/secret/apikeys/twitter', headers={'x-vault-token': token}
+)
+
 
 apikey = r.json()['data']['value']
 
